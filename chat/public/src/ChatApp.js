@@ -8,13 +8,17 @@ class ChatApp extends React.Component {
     this.state = {
       loggedIn: false
     }
+
+    socket.on('loggedIn', data => {
+      this.setLoggedIn( data.username );
+    });
   }
 
   setLoggedIn( username ) {
     this.setState({
       loggedIn: true,
       username
-    })
+    });
   }
 
   render() {

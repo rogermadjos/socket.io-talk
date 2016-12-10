@@ -10,11 +10,25 @@ const router = new Router(),
 app.use(serve('public'));
 app.use(router.routes());
 
-let port = +process.env.PORT || 80
+let port = +process.env.PORT || 8080
 const server = http.createServer(app.callback()).listen(port);
 console.log('Server is listening at port ' + port);
 // Socket.IO
 const io = Socket(server);
 io.on('connection', function(socket) {
-  console.log('connected');
+  socket.on('login', function(data) {
+    console.log('login', data);
+    socket.username = data.username;
+    socket.emit('loggedIn', { username: data.username });
+  });
+
+  socket.on('message', data => {
+    console.log(data);
+    let payload = {
+      username: socket.username,
+      message: data.message
+    };
+    socket.broadcast.emit('message', payload);
+    socket.emit('message', payload);
+  });
 });

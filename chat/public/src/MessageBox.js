@@ -11,11 +11,20 @@ class MessageBox extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.send = this.send.bind(this);
 
+    socket.on('message', data => {
+      let messages = this.state.messages.slice(0);
+      messages.push(data);
+      this.setState({
+        current: '',
+        messages
+      });
+    });
   }
 
   send() {
     if (this.state.current) {
       this.setState({current: ''});
+      socket.emit('message', {message: this.state.current});
     }
   }
 

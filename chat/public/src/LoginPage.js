@@ -15,6 +15,7 @@ class LoginPage extends React.Component {
 
   login() {
     if (this.state.username) {
+      socket.emit('login', { username: this.state.username });
     }
   }
 
